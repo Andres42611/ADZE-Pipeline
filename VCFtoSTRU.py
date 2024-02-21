@@ -1,3 +1,9 @@
+# File: VCFtoSTRU.py
+# Principal Investigator: Dr. Zachary Szpiech
+# Date: 21 February 2024
+# Author: Andres del Castillo
+# Purpose: Converts all simulation VCF files in a given directory to .stru files
+
 #!/usr/bin/env python3
 from parser import create_parser
 
