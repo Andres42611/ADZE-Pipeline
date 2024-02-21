@@ -20,7 +20,7 @@ done
 # Process the VCF files into STRU format
 ./VCFtoSTRU.py -P "$5"
 
-#Clean directory to only leave .stru files
+# Clean directory to only leave .stru files
 for i in {0..99}; do
     rm "$1/$4_rep_${i}.vcf"
 done
