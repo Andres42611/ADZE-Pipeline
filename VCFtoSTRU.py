@@ -6,7 +6,7 @@
 # Author: Andres del Castillo
 # Purpose: Converts all simulation VCF files in a given directory to .stru files
 
-from parser import create_parser
+from parser import init_VCFtoSTRU_Parser
 
 #Parse command-line arguments
 parsed = init_VCFtoSTRU_Parser()
