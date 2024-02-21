@@ -5,7 +5,7 @@
 # Date: 21 February 2024
 # Author: Andres del Castillo
 # Purpose: Using positional arguments (in same order as parser): conducts simulations, converts .trees files to .vcf and finally to .stru, 
-#and cleans + saves given directory
+# and cleans + saves given directory
 
 
 # Run simulation with provided arguments
