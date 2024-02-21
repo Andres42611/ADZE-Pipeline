@@ -8,7 +8,7 @@
 # and cleans + saves given directory
 
 
-# Run simulation with provided arguments:
+# Run simulation with provided positional arguments:
 #    $1: directory for storing data files (preferably empty)
 #    $2: source population for migration BACKWARDS in time (read more at: https://tskit.dev/msprime/docs/stable/demography.html#migration)
 #    $3: destination population for migration BACKWARDS in time (read more at: https://tskit.dev/msprime/docs/stable/demography.html#migration)
