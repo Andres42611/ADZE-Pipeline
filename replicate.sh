@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # File: replicate.sh
 # Principal Investigator: Dr. Zachary Szpiech
 # Date: 21 February 2024
