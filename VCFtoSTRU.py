@@ -4,7 +4,7 @@
 # Principal Investigator: Dr. Zachary Szpiech
 # Date: 21 February 2024
 # Author: Andres del Castillo
-# Purpose: Converts all simulation VCF files in a given directory to .stru files
+# Purpose: Converts a simulation VCF file in a given directory to a .stru file
 
 from parser import init_VCFtoSTRU_Parser
 
