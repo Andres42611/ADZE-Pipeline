@@ -37,12 +37,11 @@ for rep in range(100):
   #simulate coalescence
   ts = msprime.sim_ancestry(samples={"A": 200, "B": 200, "C": 200},
                           sequence_length=1e6,  # 1 Mbp
-                          recombination_rate=2e-8,
+                          recombination_rate=1.78e-8,
                           ploidy=2,
                           demography=demography)
-  
   #Sprinkle tolerant mutations
-  finalrep = msprime.sim_mutations(ts, rate=1e-7, keep=True)
+  finalrep = msprime.sim_mutations(ts, rate=2e-8, keep=True)
 
   #Save as .trees file
   path_to_save = args.direc + "/" + str(args.Case) + "_rep_" + str(rep) + ".trees"
