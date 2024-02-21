@@ -7,13 +7,14 @@
 # and cleans + saves given directory
 
 
-# Run simulation with provided positional arguments:
+# Script runs provided positional arguments:
 #    $1: directory for storing data files (preferably empty)
 #    $2: source population for migration BACKWARDS in time (read more at: https://tskit.dev/msprime/docs/stable/demography.html#migration)
 #    $3: destination population for migration BACKWARDS in time (read more at: https://tskit.dev/msprime/docs/stable/demography.html#migration)
 #    $4: Classification label for simulation case (e.g. A,B,C, etc.)
 #    $5: File path to tab-delimited txt population file (column 1: sample ID, column 2: population ID (must be integer))
 
+#Begin by running 100 replications of msprime sims
 ./simulation.py -D "$1" -s "$2" -d "$3" -C "$4"
 
 # Convert .trees files to .vcf and delete the .trees files
