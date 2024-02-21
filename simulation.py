@@ -21,7 +21,7 @@ demography.add_population_split(time=100, derived=["A", "B"], ancestral="AB")
 demography.add_population_split(time=200, derived=["AB", "C"], ancestral="ABC")
 
 #set incremental migration rates for each replicate
-migration_rates = np.linspace(0.05, 0.5,100)
+migration_rates = np.linspace(0.05, 0.5, 100)
 
 #Go through 100 simulation replicates, each with incremented migration
 for rep in range(100):
