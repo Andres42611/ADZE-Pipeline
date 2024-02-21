@@ -8,7 +8,8 @@
 
 from parser import create_parser
 
-parsed = create_parser()
+#Parse command-line arguments
+parsed = init_VCFtoSTRU_Parser()
 args = parsed.parse_args()
 
 # Description:
