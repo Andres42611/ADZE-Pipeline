@@ -98,4 +98,4 @@ def convert_all_vcf_to_stru(vcf_file_path, input_sample_names, formatted_rows):
 
 formatted_rows, input_sample_names = process_population_file(args.POP)
 
-convert_all_vcf_to_stru(input_sample_names, formatted_rows)
+convert_all_vcf_to_stru(args.VCF, input_sample_names, formatted_rows)
