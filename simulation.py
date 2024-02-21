@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+
+# File: simulation.py
+# Principal Investigator: Dr. Zachary Szpiech
+# Date: 21 February 2024
+# Author: Andres del Castillo
+# Purpose: MSPRIME simulation script for given demography over 100 replicates
+
 import msprime
 import argparse
 import numpy as np
