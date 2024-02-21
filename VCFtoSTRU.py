@@ -40,7 +40,7 @@ def process_population_file(file):
 
 
 # Description:
-#     This function converts all Variant Call Format (VCF) files in a directory into STRU format files used for ADZE genetic analysis. 
+#     This function converts a Variant Call Format (VCF) files into a .stru format files used for ADZE genetic analysis. 
 #     It reads a VCF file, extracts genotype information for specified samples, and writes the genotype data 
 #     into a new file in STRU format. The STRU format is designed for population genetics analyses and includes 
 #     loci information along with the genotype data for each sample across all loci.
@@ -50,13 +50,11 @@ def process_population_file(file):
 #     list formatted_rows, a list of formatted row identifiers or metadata for each sample to include in the STRU file.
 # Returns:
 #     int 0, void indicates successful execution and completion of the function.
-def convert_all_vcf_to_stru(input_sample_names, formatted_rows):
-  for rep in range(100):
+def convert_all_vcf_to_stru(vcf_file_path, input_sample_names, formatted_rows):
     # Initialize variables
     loci_alleles = {}
     sample_genotype_data = {name: ([], []) for name in input_sample_names}  # Store genotypes for each sample
 
-    vcf_file_path = args.direc + "/" + str(args.Case) + "_rep_" + str(rep) + ".vcf"
     # Open VCF file once to read all necessary data
     with open(vcf_file_path, 'r') as vcf:
         for line in vcf:
@@ -85,8 +83,8 @@ def convert_all_vcf_to_stru(input_sample_names, formatted_rows):
                 sample_genotype_data[sample_name][0].append(alleles_values[0])
                 sample_genotype_data[sample_name][1].append(alleles_values[1] if len(alleles_values) > 1 else alleles_values[0])
 
-    # Write to the output file
-    stru_file_path = args.direc + "/" + str(args.Case) + "_rep_" + str(rep) + ".stru"
+    # Write to the output file (same name as VCF file, just with .stru format)
+    stru_file_path = vcf_file_path.split('.vcf')[0] + '.stru'
     with open(stru_file_path, 'w') as output:
         # Write header for loci
         output.write(' '.join(loci_alleles.keys()) + '\n')
@@ -96,7 +94,7 @@ def convert_all_vcf_to_stru(input_sample_names, formatted_rows):
             output.write(f'{formatted_rows[counter]} ' + ' '.join(genotype_data_first_line) + '\n')
             output.write(f'{formatted_rows[counter]} ' + ' '.join(genotype_data_second_line) + '\n')
 
-  return 0
+    return 0
 
 formatted_rows, input_sample_names = process_population_file(args.POP)
 
