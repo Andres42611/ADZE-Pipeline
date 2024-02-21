@@ -12,7 +12,7 @@ import numpy as np
 from parser import create_parser
 
 #initialize parser
-parsed = create_parser()
+parsed = init_Simulation_Parser()
 args = parsed.parse_args()
 
 #initialize demography population splits
