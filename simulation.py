@@ -9,7 +9,7 @@
 import msprime
 import argparse
 import numpy as np
-from parser import create_parser
+from parser import init_Simulation_Parser
 
 #initialize parser
 parsed = init_Simulation_Parser()
