@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-
+# File: parser.py
+# Principal Investigator: Dr. Zachary Szpiech
+# Date: 21 February 2024
+# Author: Andres del Castillo
+# Purpose: Initializes parsers for parsing command line arguments using argparse
 
 import argparse
     
