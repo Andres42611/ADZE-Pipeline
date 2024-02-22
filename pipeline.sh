@@ -18,7 +18,7 @@
 ./simulation.py -D "$1" -s "$2" -d "$3" -C "$4"
 
 #Initialize final dataset for case with header
-echo "k alpha_1 alpha_2 alpha_3 pi_1 pi_2 pi_3 pihat_12 pihat_13 pihat_23 Class" > "$1/case$4_data.csv"
+echo "k,alpha_1,alpha_2,alpha_3,pi_1,pi_2,pi_3,pihat_12,pihat_13,pihat_23,Class" > "$1/case$4_data.csv"
 
 # Convert .trees files to .vcf and delete the .trees files
 for i in {0..99}; do
