@@ -139,7 +139,7 @@ def write_combined_csv(combined_data, output_csv_path, label):
 # Returns:
 #     None. The function directly writes the combined statistical data to a CSV file;
 def process_files(alpha_file, pi_file, pihat_file, label):
-    output_csv_path = alpha_file.split('richness.txt')[0] + '.csv'  #same file directory as ADZE output but csv 
+    output_csv_path = alpha_file.split('richness')[0] + '.csv'  #same file directory as ADZE output but csv 
 
     alpha_stats = read_stats_from_file(alpha_file)
     pi_stats = read_stats_from_file(pi_file)
