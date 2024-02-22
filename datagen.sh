@@ -5,7 +5,7 @@
 # Date: 21 February 2024
 # Author: Andres del Castillo
 # Purpose: Using positional arguments (order below), generates compact genetic data:
-# conducts simulations, converts .trees files to .vcf and finally to .stru, runs ADZE analyses on .stru files, converts ADZE output
+# conducts msprime simulations, converts .trees files to .vcf and finally to .stru, runs ADZE analyses on .stru files, converts ADZE output
 # to CSV datset for each replicate, combines all CSV replicate data into a final CSV dataset for the class label, 
 # and cleans given directory to only leave final dataset
 
