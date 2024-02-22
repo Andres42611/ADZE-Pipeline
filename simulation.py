@@ -32,7 +32,8 @@ migration_rates = np.linspace(0.05, 0.5, 100)
 
 #Go through 100 simulation replicates, each with incremented migration
 for rep in range(100):
-  demography.set_migration_rate(source=args.source, dest=args.dest, rate=migration_rates[rep])
+  if args.source and args.dest:
+    demography.set_migration_rate(source=args.source, dest=args.dest, rate=migration_rates[rep])
   
   #simulate coalescence
   ts = msprime.sim_ancestry(samples={"A": 200, "B": 200, "C": 200},
