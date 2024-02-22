@@ -6,7 +6,6 @@
 #(for more information on ADZE: https://github.com/szpiech/ADZE)
 
 # Note: Empty/None values will be included in command-line arguments as they are replicate depedent variables (e.g. # of loci)
-# The entire line after a '#' will be ignored.
 
 ###----Main Parameters----###
 MAX_G 199                #Max standardized sample size
