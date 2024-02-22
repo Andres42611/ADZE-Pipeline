@@ -1,5 +1,5 @@
 #!/bin/bash
-# File: Pipeline.sh
+# File: pipeline.sh
 # Principal Investigator: Dr. Zachary Szpiech
 # Date: 21 February 2024
 # Author: Andres del Castillo
