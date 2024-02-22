@@ -1,10 +1,12 @@
 #!/bin/bash
-# File: pipeline.sh
+# File: datagen.sh
 # Principal Investigator: Dr. Zachary Szpiech
 # Date: 21 February 2024
 # Author: Andres del Castillo
-# Purpose: Using positional arguments (in same order as parser): conducts simulations, converts .trees files to .vcf and finally to .stru, 
-# and cleans + saves given directory
+# Purpose: Using positional arguments (in same order as parser), generates compact genetic data:
+# conducts simulations, converts .trees files to .vcf and finally to .stru, runs ADZE analyses on .stru files, converts ADZE output
+# to CSV datset for each replicate, combines all CSV replicate data into a final CSV dataset for the class label, 
+# and cleans given directory to only leave final dataset
 
 
 # Script runs provided positional arguments:
