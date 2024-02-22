@@ -1,3 +1,10 @@
+# File: simparamfile.txt
+# Principal Investigator: Dr. Zachary Szpiech
+# Date: 21 February 2024
+# Author: Andres del Castillo
+# Purpose: ADZE paramfile for running ADZE analysis (ZA Szpiech, M Jakobsson, NA Rosenberg. (2008) ADZE: a rarefaction approach for counting alleles private to combinations of populations. Bioinformatics 24: 2498-2504.) (for more information on ADZE: https://github.com/szpiech/ADZE)
+
+
 # This is a parameter file for ADZE.
 # Note: empty sections will be included in command-line arguments as they are replicate depedent variables (e.g. # of loci)
 # The entire line after a '#' will be ignored.
