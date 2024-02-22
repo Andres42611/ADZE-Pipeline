@@ -19,17 +19,24 @@
 
 # Convert .trees files to .vcf and delete the .trees files
 for i in {0..99}; do
-    #First convert from .trees to .vcf
+    # First convert from .trees to .vcf
     python3 -m tskit vcf "$1/$4_rep_${i}.trees" > "$1/$4_rep_${i}.vcf"
 
     # Now process the VCF files into STRU format
     ./VCFtoSTRU.py -V "$1/$4_rep_${i}.vcf" -P "$5"
 
-    num_loci=$(awk 'NR==1{print gsub(/ /," ")+1; exit}' "$1/$4_rep_${i}.stru")
-    ./ADZE-1.0/adze-1.0 sim_paramfile.txt -f "$1/$4_rep_${i}.stru" -l ${num_loci} -r "$1/$4_rep_${i}richness.txt" -p "$1/$4_rep_${i}private.txt" -o "$1/$4_rep_${i}comb.txt" 
+    # Move to ADZE analysis (ZA Szpiech, M Jakobsson, NA Rosenberg. (2008) ADZE: a rarefaction approach for counting alleles private to combinations of populations. Bioinformatics 24: 2498-2504.)
+    # using both the paramfile and command line arguments (read more at: https://github.com/szpiech/ADZE)
+    num_loci=$(awk 'NR==1{print gsub(/ /," ")+1; exit}' "$1/$4_rep_${i}.stru") #get number of loci from VCF
+    ./ADZE-1.0/adze-1.0 sim_paramfile.txt -f "$1/$4_rep_${i}.stru" -l ${num_loci} -r "$1/$4_rep_${i}richness.txt" -p "$1/$4_rep_${i}private.txt" -o "$1/$4_rep_${i}comb.txt" -pp 0 
 
-    ./
-    #Finally clean the directory to only leave .stru file
+    # After obtaining our ADZE analysis files, convert the replicate's data to a CSV dataset (making sure to add a _2 to the comb name)
+    ./ADZEtoCSV.py -r "$1/$4_rep_${i}richness.txt" -p "$1/$4_rep_${i}private.txt" -o "$1/$4_rep_${i}comb_2.txt" -C "$4"
+    
+    # Finally clean the directory to only leave replicate's dataset
     rm "$1/$4_rep_${i}.trees"
     rm "$1/$4_rep_${i}.vcf"
+    rm "$1/$4_rep_${i}richness.txt"
+    rm "$1/$4_rep_${i}private.txt"
+    rm "$1/$4_rep_${i}comb_2.txt"
 done
