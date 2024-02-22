@@ -29,10 +29,13 @@ demography.add_population_split(time=200, derived=["AB", "C"], ancestral="ABC")
 
 #set incremental migration rates for each replicate
 migration_rates = np.linspace(0.05, 0.5, 100)
+#Check for user-input migration flag:
+migration = (args.source != '0' and args.dest != '0')
 
 #Go through 100 simulation replicates, each with incremented migration
 for rep in range(100):
-  if args.source and args.dest:
+  #if migration will occur
+  if migration:
     demography.set_migration_rate(source=args.source, dest=args.dest, rate=migration_rates[rep])
   
   #simulate coalescence
