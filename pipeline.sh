@@ -40,5 +40,5 @@ for i in {0..99}; do
     tail -n +2 "$1/$4_rep_${i}.csv" >> "$1/case$4_data.csv"
     
     # Finally clean the directory to only leave the final dataset
-    rm "$1/$4_rep_${i}.trees" "$1/$4_rep_${i}.vcf" "$1/$4_rep_${i}richness" "$1/$4_rep_${i}private" "$1/$4_rep_${i}comb_2" "$1/$4_rep_${i}richness_summary" "$1/$4_rep_${i}.csv"
+    rm "$1/$4_rep_${i}.trees" "$1/$4_rep_${i}.vcf" "$1/$4_rep_${i}.stru" "$1/$4_rep_${i}richness" "$1/$4_rep_${i}private" "$1/$4_rep_${i}comb_2" "$1/$4_rep_${i}richness_summary" "$1/$4_rep_${i}.csv"
 done
