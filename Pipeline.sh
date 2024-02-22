@@ -1,5 +1,5 @@
 #!/bin/bash
-# File: replicate.sh
+# File: Pipeline.sh
 # Principal Investigator: Dr. Zachary Szpiech
 # Date: 21 February 2024
 # Author: Andres del Castillo
@@ -25,6 +25,10 @@ for i in {0..99}; do
     # Now process the VCF files into STRU format
     ./VCFtoSTRU.py -V "$1/$4_rep_${i}.vcf" -P "$5"
 
+    num_loci=$(awk 'NR==1{print gsub(/ /," ")+1; exit}' "$1/$4_rep_${i}.stru")
+    ./ADZE-1.0/adze-1.0 sim_paramfile.txt -f "$1/$4_rep_${i}.stru" -l ${num_loci} -r "$1/$4_rep_${i}richness.txt" -p "$1/$4_rep_${i}private.txt" -o "$1/$4_rep_${i}comb.txt" 
+
+    ./
     #Finally clean the directory to only leave .stru file
     rm "$1/$4_rep_${i}.trees"
     rm "$1/$4_rep_${i}.vcf"
