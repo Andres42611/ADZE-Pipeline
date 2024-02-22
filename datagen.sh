@@ -36,7 +36,7 @@ for i in {0..99}; do
     num_loci=$(awk 'NR==1{print gsub(/ /," ")+1; exit}' "$1/$4_rep_${i}.stru") #get number of loci from VCF
     ./ADZE-1.0/adze-1.0 sim_paramfile.txt -f "$1/$4_rep_${i}.stru" -l ${num_loci} -r "$1/$4_rep_${i}richness" -p "$1/$4_rep_${i}private" -o "$1/$4_rep_${i}comb" -pp 0 
 
-    # After obtaining our ADZE analysis files, convert the replicate's data to a CSV dataset (making sure to add a _2 to the comb file name)
+    # After obtaining our ADZE analysis files, convert the replicate's data to a CSV dataset (making sure to add a _2 to the comb file name, as done by ADZE)
     ./ADZEtoCSV.py -r "$1/$4_rep_${i}richness" -p "$1/$4_rep_${i}private" -c "$1/$4_rep_${i}comb_2" -C "$4"
 
     # Append replicate CSV data to final dataset
