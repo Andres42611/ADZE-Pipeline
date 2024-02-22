@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # File: datagen.sh
 # Principal Investigator: Dr. Zachary Szpiech
 # Date: 21 February 2024
