@@ -17,6 +17,9 @@
 #Begin by running 100 replications of msprime sims
 ./simulation.py -D "$1" -s "$2" -d "$3" -C "$4"
 
+#Initialize final dataset for case with header
+echo "k alpha_1 alpha_2 alpha_3 pi_1 pi_2 pi_3 pihat_12 pihat_13 pihat_23 Class" > "$1/case$4_data.csv"
+
 # Convert .trees files to .vcf and delete the .trees files
 for i in {0..99}; do
     # First convert from .trees to .vcf
@@ -32,11 +35,10 @@ for i in {0..99}; do
 
     # After obtaining our ADZE analysis files, convert the replicate's data to a CSV dataset (making sure to add a _2 to the comb file name)
     ./ADZEtoCSV.py -r "$1/$4_rep_${i}richness" -p "$1/$4_rep_${i}private" -c "$1/$4_rep_${i}comb_2" -C "$4"
+
+    # Append replicate CSV data to final dataset
+    tail -n +2 "$1/$4_rep_${i}.csv" >> "$1/case$4_data.csv"
     
-    # Finally clean the directory to only leave replicate's dataset
-    rm "$1/$4_rep_${i}.trees"
-    rm "$1/$4_rep_${i}.vcf"
-    rm "$1/$4_rep_${i}richness"
-    rm "$1/$4_rep_${i}private"
-    rm "$1/$4_rep_${i}comb_2"
+    # Finally clean the directory to only leave the final dataset
+    rm "$1/$4_rep_${i}.trees" "$1/$4_rep_${i}.vcf" "$1/$4_rep_${i}richness" "$1/$4_rep_${i}private" "$1/$4_rep_${i}comb_2" "$1/$4_rep_${i}.csv"
 done
