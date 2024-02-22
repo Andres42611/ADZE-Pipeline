@@ -1,3 +1,8 @@
+# File: POP.txt
+# Principal Investigator: Dr. Zachary Szpiech
+# Date: 21 February 2024
+# Author: Andres del Castillo
+# Purpose: Comprehensive population file to be used by VCFtoSTRU.py
 tsk_0	1
 tsk_1	1
 tsk_2	1
