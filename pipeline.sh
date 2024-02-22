@@ -28,15 +28,15 @@ for i in {0..99}; do
     # Move to ADZE analysis (ZA Szpiech, M Jakobsson, NA Rosenberg. (2008) ADZE: a rarefaction approach for counting alleles private to combinations of populations. Bioinformatics 24: 2498-2504.)
     # using both the paramfile and command line arguments (read more at: https://github.com/szpiech/ADZE)
     num_loci=$(awk 'NR==1{print gsub(/ /," ")+1; exit}' "$1/$4_rep_${i}.stru") #get number of loci from VCF
-    ./ADZE-1.0/adze-1.0 sim_paramfile.txt -f "$1/$4_rep_${i}.stru" -l ${num_loci} -r "$1/$4_rep_${i}richness.txt" -p "$1/$4_rep_${i}private.txt" -o "$1/$4_rep_${i}comb.txt" -pp 0 
+    ./ADZE-1.0/adze-1.0 sim_paramfile.txt -f "$1/$4_rep_${i}.stru" -l ${num_loci} -r "$1/$4_rep_${i}richness" -p "$1/$4_rep_${i}private" -o "$1/$4_rep_${i}comb" -pp 0 
 
     # After obtaining our ADZE analysis files, convert the replicate's data to a CSV dataset (making sure to add a _2 to the comb file name)
-    ./ADZEtoCSV.py -r "$1/$4_rep_${i}richness.txt" -p "$1/$4_rep_${i}private.txt" -o "$1/$4_rep_${i}comb_2.txt" -C "$4"
+    ./ADZEtoCSV.py -r "$1/$4_rep_${i}richness" -p "$1/$4_rep_${i}private" -o "$1/$4_rep_${i}comb_2" -C "$4"
     
     # Finally clean the directory to only leave replicate's dataset
     rm "$1/$4_rep_${i}.trees"
     rm "$1/$4_rep_${i}.vcf"
-    rm "$1/$4_rep_${i}richness.txt"
-    rm "$1/$4_rep_${i}private.txt"
-    rm "$1/$4_rep_${i}comb_2.txt"
+    rm "$1/$4_rep_${i}richness"
+    rm "$1/$4_rep_${i}private"
+    rm "$1/$4_rep_${i}comb_2"
 done
