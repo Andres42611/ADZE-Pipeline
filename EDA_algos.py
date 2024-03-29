@@ -38,6 +38,7 @@ def process_dataset(df, only_mu=True):
     
 
 # Description:
+#    (3/6/24 Weekly Doc PCA plot function)
 #    This function performs Principal Component Analysis (PCA) on scaled feature data and plots the first two PCA components, 
 #    color-coded by class labels and annotate select k values. It can handle any number of dimensions. It calculates the explained variance ratio 
 #    for the components and optionally prints it. The function can also return the
@@ -106,6 +107,7 @@ def PCA_plot(df, y, k_values, n_components=2, title='PCA-Reduced Data',
 
 
 # Description:
+#    (3/29/24 Weekly Doc density ditributions plot function)
 #    This function plots combined density histograms for a set of statistical measures within a given dataset. 
 #    It filters the data by unique classes and selected 'k' values, calculates the bin width using the Freedman-Diaconis rule, 
 #    and generates density histograms for each class-statistic pair. Specific 'k' values of interest, [2, 50, 100, 150, 199], are highlighted 
@@ -162,6 +164,7 @@ def plot_density_histograms(df, stats):
             plt.show()
 
 # Description:
+#    (3/29/24 Weekly Doc Case-by-Case PCA plot function)
 #    This function iteratively generates 2D PCA plots for specified replicates and classes within df.
 #    It first determines global bounds for principal components to standardize plot ranges across different classes and replicates.
 #    In the second pass, it performs PCA for each class and replicate pair, standardizing the data excluding specified columns. 
