@@ -3,7 +3,7 @@
 # Principal Investigator: Dr. Zachary Szpiech
 # Date: 10 April 2024
 # Author: Andres del Castillo
-# Purpose: MSPRIME simulation script for given demography over 100 replicates
+# Purpose: MSPRIME simulation script for given demography over a user-specified number of replicates
 
 import msprime
 import argparse
