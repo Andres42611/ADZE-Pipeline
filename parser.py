@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # File: parser.py
 # Principal Investigator: Dr. Zachary Szpiech
-# Date: 21 February 2024
+# Date: 10 April 2024
 # Author: Andres del Castillo
 # Purpose: Initializes parsers for parsing command line arguments using argparse
 
@@ -15,7 +15,8 @@ def init_Simulation_Parser():
     parser.add_argument('-s', '--source', type=str, required=False, default='0', metavar='SOURCE_MIGRATION_POP', help="Source population for migration; default: '0' for no migrationn")
     parser.add_argument('-d', '--dest', type=str, required=False, default='0', metavar='DESTINATION_MIGRATION_POP', help="Destination population for migration; default: '0' for no migration")
     parser.add_argument('-C', '--Case', type=str, required=True, metavar='MIGRATION_CASE', help='Migration Case for Study')
-    
+    parser.add_argument('-r', '--repnum', type=int, required=True, metavar='REPLICATE_NUMBER', help='Number of replicates to run for label')   
+
     return parser
     
 def init_VCFtoSTRU_Parser():
@@ -33,7 +34,14 @@ def init_ADZEtoCSV_Parser():
     # Files and mandatory inputs for converting VCF file to .stru file
     parser.add_argument('-r', '--rout', type=str, required=True, metavar='RICHNESS_FILE', help='R_OUT File Path')
     parser.add_argument('-p', '--pout', type=str, required=True, metavar='PRIVATE_RICHNESS_FILE', help='P_OUT File Path')
-    parser.add_argument('-c', '--cout', type=str, required=True, metavar='COMB_RICHNESS_FILE', help='C_OUT File Path')
     parser.add_argument('-C', '--Case', type=str, required=True, metavar='CLASS', help='Classification label')
 
     return parser
+
+def init_datasplit_Parser():
+    parser = argparse.ArgumentParser(description='Dataset Stratification parameters')
+
+    # Files and mandatory inputs for converting VCF file to .stru file
+    parser.add_argument('-D', '--direc', type=str, required=True, metavar='SAVING_DIRECTORY', help='Directory to with case (A-E) datasets')
+
+    return parser   
