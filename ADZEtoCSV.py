@@ -2,10 +2,12 @@
 
 # File: ADZEtoCSV.py
 # Principal Investigator: Dr. Zachary Szpiech
-# Date: 21 February 2024
+# Date: 10 April 2024
 # Author: Andres del Castillo
 # Purpose: Converts all three ADZE output files into a processed CSV dataset
 import csv
+import pandas as pd
+import numpy as np
 from parser import init_ADZEtoCSV_Parser
 
 #Parse command-line arguments
@@ -14,138 +16,122 @@ args = parsed.parse_args()
 
 
 # Description:
-#     This function reads ADZE statistical data from a specified file and organizes it into a dictionary for analysis. 
-#     The function can operate in two modes: default and "pihat" mode. 
-#     
-#     In default mode, it organizes data by an integer key (the second element of each line) and collects statistics as tuples in a list. 
-#     In "pihat" mode, it uses a combination of the first two elements of each line as keys for
-#     sub-dictionaries, with an integer key (the third element) as the 
-#     main dictionary key, organizing the statistics as tuples in these sub-dictionaries.
+#     Converts the contents of a file specified by the path to a structured NumPy array. This function is designed to process files containing 
+#     statistical data from ADZE output, which can be in two formats. The function parses each line of the ADZE output file, extracts relevant 
+#     the vector (mean, variance, and standard deviation error), and organizes them into a structured array with identifiers for each data point 
+#     (either a population ID for alpha/pi files or a combination ID for pihat files).
 # Accepts:
-#     str file_path, the path to the file from which to read the statistical data. The file is expected to contain 
-#     whitespace-separated values where the specific columns used depend on the mode of operation (is_pihat);
-#     bool is_pihat (optional), a flag indicating whether to operate in "pihat" mode. In "pihat" mode, the function 
-#     uses a different schema for interpreting and organizing data. If False or omitted, the function operates in default mode;
+#     str path: The file path to the ADZE output file. Conceptually, this is the source of the statistical data to be parsed and converted.
+#     bool alphafile: A flag indicating whether the file is an alpha file (True) or not (False).
+#     bool pihatfile: A flag indicating whether the file is a pihat file (True) or not (False).
 # Returns:
-#     dict data_dict, a dictionary containing the organized statistical data. In default mode, this dictionary maps integer 
-#     keys to lists of statistic tuples. In "pihat" mode, it maps integer keys to dictionaries, which then map population 
-#     combination strings to statistic tuples;
-def read_stats_from_file(file_path, is_pihat=False):
-    data_dict = {}
-    with open(file_path, 'r') as file:
-        for line in file:
-            parts = line.strip().split()
-            if len(parts) < 6:
-                continue
-            
-            if is_pihat:
-                # For pihat, use the combination of the first two numbers as the population combination key
-                pop_comb = parts[0] + parts[1]
-                k = int(parts[2])
-                stats = tuple(map(float, parts[4:]))
-                if k not in data_dict:
-                    data_dict[k] = {}
-                data_dict[k][pop_comb] = stats
-            else:
-                k = int(parts[1])
-                stats = tuple(map(float, parts[3:]))
-                if k not in data_dict:
-                    data_dict[k] = []
-                data_dict[k].append(stats)
-    return data_dict
+#     ndarray data_array: A NumPy array containing the parsed data from the statistics file.
+def ADZE_to_array(path, alphafile=False, pihatfile=False):
+  data_list = []
+  with open(path, 'r') as file:
+    rep_counter = 1
+    prev_k = 2
+    for line in file:
+        columns = line.split()
+        if columns:
+            stat_vector = f"({columns[-3]}, {columns[-2]}, {columns[-1]})"
+            if pihatfile: #for pihat files
+              comb_size = int(path[-1])
+              combinationID = "pihat_" + ''.join(columns[:comb_size])
+
+              data_row = [combinationID] + [columns[comb_size]] + [stat_vector] # format is 'combination', 'k', '(mean, var, SDE)' 
+            elif columns: #for alpha files
+              popID = f"alpha_{columns[0]}" if alphafile else f"pi_{columns[0]}"
+              data_row = [popID] + [columns[1]] + [stat_vector]
+
+            data_list.append(data_row)
+
+  # Convert list to NumPy array
+  data_array = np.array(data_list, dtype=None)
+  return data_array
 
 
 # Description:
-#     This function combines ADZE statistical data from three different sources (alpha, pi, and pihat statistics) into a single 
-#     consolidated dictionary. It iterates over the union of keys from all three input dictionaries and aggregates the data 
-#     for each key into a nested dictionary structure. This structure includes default values for missing data, ensuring that 
-#     each key in the combined dictionary has a consistent format.
+#     Generates a list of file paths for pihat files based on a specified output prefix and a range of combination sizes. This function constructs 
+#     the paths by appending a combination identifier ('comb_') followed by an index that represents the combination size (from 2 to J-1, where J is
+#     the total number of populations) to the given output prefix. 
 # Accepts:
-#     dict alpha_stats, a dictionary where each key maps to a list containing three alpha statistical measures;
-#     dict pi_stats, a dictionary where each key maps to a list containing three pi statistical measures;
-#     dict pihat_stats, a dictionary where each key maps to a sub-dictionary. The sub-dictionaries map string identifiers 
-#     (representing population combinations) to tuples containing three pihat statistical measures;
+#     str output_prefix: The base path or prefix to which the combination identifier and index will be appended. Conceptually, this represents the 
+#                        directory and/or initial part of the filename before the combination size specification.
+#     int J: The number of populations in the simulations.
 # Returns:
-#     dict combined_data, a dictionary that combines the statistics from alpha_stats, pi_stats, and pihat_stats. For each 
-#     key found in any of the three input dictionaries, combined_data will contain a nested dictionary with three entries:
-#     'alpha', 'pi', and 'pihat', each storing the corresponding statistics from the input dictionaries. If any statistics 
-#     are missing for a key, default values of [None, None, None] or {'12': (None, None, None), '13': (None, None, None), 
-#     '23': (None, None, None)} are used for 'alpha'/'pi' and 'pihat', respectively.
-def combine_statistics(alpha_stats, pi_stats, pihat_stats):
-    combined_data = {}
-    for k in set(list(alpha_stats.keys()) + list(pi_stats.keys()) + list(pihat_stats.keys())):
-        combined_data[k] = {
-            'alpha': alpha_stats.get(k, [None, None, None]),
-            'pi': pi_stats.get(k, [None, None, None]),
-            'pihat': pihat_stats.get(k, {'12': (None, None, None), '13': (None, None, None), '23': (None, None, None)})
-        }
-    return combined_data
+#     list paths: A list of strings, each representing a file path for a pihat file corresponding to a specific combination size.
+def pihat_pathgen(output_prefix, J):
+  paths = []
+  for i in range(2, J):
+    paths.append(output_prefix + 'comb_' + str(i))
+  
+  return paths
 
 
 # Description:
-#     This function writes the combined statistical data to a CSV file. The combined data includes statistics from alpha, 
-#     pi, and pihat analyses, formatted and organized by g-valued key 'k'. The function creates a CSV file with a header row 
-#     followed by rows for each key in the combined data, including statistical values and a class label for 
-#     each row.
+#     This function generates a CSV file containing statistical data processed from multiple ADZE output files, including alpha diversity files, pi 
+#     diversity files, and pihat files. It first constructs the base file path from the first stat file, extracts data from alpha and pi files using 
+#     ADZE_to_array, and generates paths for pihat files based on the number of unique alpha identifiers. It then processes each pihat file and 
+#     combines all statistics into a single Pandas DataFrame. The DataFrame is organized with columns for each statistic (alpha, pi, and pihat values), 
+#     a 'Class' column indicating the biological or experimental group, and a 'Replicate' column specifying the replicate number. The function 
+#     finally exports this DataFrame to a CSV file named after the output prefix with '.csv' extension. This CSV file facilitates the analysis of 
+#     biodiversity data by consolidating various statistics into a single, easily accessible format.
 # Accepts:
-#     dict combined_data, a dictionary containing the combined statistics for different keys. Each key maps to a nested 
-#     dictionary with 'alpha', 'pi', and 'pihat' statistics, each of which may contain a tuple of (mean, variance, std. error);
-#     str output_csv_path, the file path where the CSV file will be written. This specifies the location and name of the output file;
-#     str label, classification label;
+#     list stat_files: A list containing the paths to the stat files (alpha and pi files) from which the data is to be processed. Conceptually, these 
+#                      files contain the raw statistical output from ADZE analysis which needs to be aggregated.
+#     str label: The label for the 'Class' column in the output DataFrame. This label indicates the biological or experimental group associated with 
+#                the data, providing a way to categorize or differentiate data in the analysis.
 # Returns:
-#     None. The function writes the combined statistical data to a CSV file at the specified path;
-def write_combined_csv(combined_data, output_csv_path, label):
-    with open(output_csv_path, 'w', newline='') as csv_file:
-        csv_writer = csv.writer(csv_file)
-        header = ['k', 
-                  'alpha_1', 'alpha_2', 'alpha_3',
-                  'pi_1', 'pi_2', 'pi_3',
-                  'pihat_12', 'pihat_13', 'pihat_23',
-                  'Class']
-        csv_writer.writerow(header)
+#     int: Always returns 0, indicating that the function has completed its execution successfully. The conceptual purpose of this return value is to 
+#          signify the end of the operation, although it doesn't convey any outcome of the process itself.
+def CSV_generator(stat_files, label):
+  #get file path to ADZE statistics files
+  output_prefix = (stat_files[0]).split('richness')[0]
+  
+  #get array of alpha and pi values across all standardized sample sizes (k)
+  alpha_arr = ADZE_to_array(stat_files[0], True)
+  pi_arr = ADZE_to_array(stat_files[1])
 
-        for k, data in sorted(combined_data.items()):
-            row = [k]
-            # Process alpha and pi statistics first
-            for stat_type in ['alpha', 'pi']:
-                stats = data[stat_type]
-                for stat in stats:
-                    if stat is not None:
-                        row.append(','.join([f"{value:.5f}" for value in stat]))  # Apply formatting to each element
-                    else:
-                        row.append('()')
+  #get statistic IDs for header
+  alphas, pis = np.unique(alpha_arr[:,0]), np.unique(pi_arr[:,0])
+  
+  #moving to pihat files, get the paths
+  pihat_paths = pihat_pathgen(output_prefix, len(alphas))
+  
+  #now get all pihat values for all possible [2, J-1]-tuples across all standardized sample sizes
+  all_pihat_arrs = []
+  for path in pihat_paths:
+    all_pihat_arrs.append(ADZE_to_array(path, False, True))
 
-            # Process pihat statistics
-            pihat_stats = data['pihat']
-            for pop_comb in ['12', '13', '23']:
-                stats = pihat_stats.get(pop_comb, (None, None, None))
-                if all(stats):  # Check if all elements in stats are not None
-                    row.append(','.join([f"{value:.7f}" for value in stats]))  # Apply formatting to each element
-                else:
-                    row.append('()')
+  #get pihat statistic IDs for header
+  pihats = [np.unique(pihat_arr[:,0]) for pihat_arr in all_pihat_arrs]
 
-            row.append(label)
-            csv_writer.writerow(row)
+  #begin building replicate's dataframe
+  headers = alphas.tolist() + pis.tolist() + np.concatenate(pihats).tolist() + ['Class', 'Replicate']
+  k_val = [str(i) for i in range(2,200)] #assuming sample size 200
+  df_final = pd.DataFrame(index=k_val, columns=headers)
+  df_final['Class'] = label
 
-# Description:
-#     This function processes the three types of statistical files (alpha, pi, and pihat) output by ADZE by reading 
-#     the statistics from each file, combining them into a single data structure, and then writing the combined data 
-#     to a CSV file. The output CSV file is saved in the same directory as the alpha file but with a '.csv' extension.
-# Accepts:
-#     str alpha_file, the file path to the alpha statistics file;
-#     str pi_file, the file path to the pi statistics file;
-#     str pihat_file, the file path to the pihat statistics file;
-#     str label, classification label;
-# Returns:
-#     None. The function directly writes the combined statistical data to a CSV file;
-def process_files(alpha_file, pi_file, pihat_file, label):
-    output_csv_path = alpha_file.split('richness')[0] + '.csv'  #same file directory as ADZE output but csv 
+  #find replicate number using string manipulation
+  rep_num = output_prefix.split(label+'_rep_')[-1]
+  df_final['Replicate'] = int(rep_num)
 
-    alpha_stats = read_stats_from_file(alpha_file)
-    pi_stats = read_stats_from_file(pi_file)
-    pihat_stats = read_stats_from_file(pihat_file, is_pihat=True)
-    combined_data = combine_statistics(alpha_stats, pi_stats, pihat_stats)
-    write_combined_csv(combined_data, output_csv_path, label)
+  #map arrays to dataframe
+  all_stat_arrs = [alpha_arr, pi_arr] + all_pihat_arrs 
+  for arr in all_stat_arrs:
+    for row in arr:
+      col_index, row_index, value = row
+      df_final.at[row_index, col_index] = value
+
+  df_final.reset_index(inplace=True)
+  df_final.rename(columns={'index': 'k'}, inplace=True)
+
+  #save dataframe as CSV
+  df_final.to_csv(output_prefix + '.csv', index=False)
+  
+  return 0
 
 
-process_files(args.rout, args.pout, args.cout, args.Case)
+stat_files = [args.rout, args.pout]
+CSV_generator(stat_files, args.Case)
