@@ -67,9 +67,9 @@ def shuffle_and_save(df, filename):
     df.sample(frac=1, random_state=42).reset_index(drop=True).to_csv(filename, index=False)
 
 # Description:
-#     This function completes the preprocessing of multiple datasets. It first combines datasets from a list of CSV file paths into a single DataFrame, then stratifies this combined dataset into training, 
-#     testing, and validation sets, ensuring proportional representation of classes across these sets. After stratification, each set is shuffled to randomize the order of its rows and then saved to separate 
-#     CSV files: 'training.csv' for the training set, 'testing.csv' for the testing set, and 'validation.csv' for the validation set. 
+#     This function completes the preprocessing of multiple datasets. It first combines datasets from a list of CSV file paths into a single DataFrame, then stratifies this 
+#     combined dataset into training, testing, and validation sets, ensuring proportional representation of classes across these sets. After stratification, each set is shuffled
+#     to randomize the order of its rows and then saved to separate CSV files: 'training.csv' for the training set, 'testing.csv' for the testing set, and 'validation.csv' for the validation set. 
 # Accepts:
 #     list csv_paths: A list of strings, where each string is a path to a CSV file containing a portion of the data to be processed. 
 # Returns:
