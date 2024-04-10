@@ -84,11 +84,11 @@ def process_datasets(csv_paths):
 
 # Paths to the case-specific CSV files
 csv_paths = [
-  args.direc + '/caseA_data.csv',
-  args.direc + '/caseB_data.csv',
-  args.direc + '/caseC_data.csv',
-  args.direc + '/caseD_data.csv',
-  args.direc + '/caseE_data.csv'
+  args.direc + '/CaseA/caseA_data.csv',
+  args.direc + '/CaseB/caseB_data.csv',
+  args.direc + '/CaseC/caseC_data.csv',
+  args.direc + '/CaseD/caseD_data.csv',
+  args.direc + '/CaseE/caseE_data.csv'
 ]
     
 process_datasets(csv_paths)
