@@ -16,7 +16,7 @@
 #    $6: Number of replicates to run
 
 #Begin by running 100 replications of msprime sims
-./simulation.py -D "$1" -s "$2" -d "$3" -C "$4" -r "$6"
+./simulation.py -D "$1" -s "$2" -d "$3" -C "$4" -r $6
 
 #Initialize final dataset for case with header
 > "$1/case$4_data.csv"
