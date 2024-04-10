@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 # File: simulation.py
 # Principal Investigator: Dr. Zachary Szpiech
 # Date: 21 February 2024
@@ -27,16 +26,14 @@ demography.add_population(name="ABC", initial_size=10_000)
 demography.add_population_split(time=100, derived=["A", "B"], ancestral="AB")
 demography.add_population_split(time=200, derived=["AB", "C"], ancestral="ABC")
 
-#set incremental migration rates for each replicate
-migration_rates = np.linspace(0.05, 0.5, 100)
-#Check for user-input migration flag:
+#Check if migraton occurs:
 migration = (args.source != '0' and args.dest != '0')
 
-#Go through 100 simulation replicates, each with incremented migration
-for rep in range(100):
+#Go through args.repnum number of simulation replicates
+for rep in range(1, args.repnum+1):
   #if migration will occur
   if migration:
-    demography.set_migration_rate(source=args.source, dest=args.dest, rate=migration_rates[rep])
+    demography.set_migration_rate(source=args.source, dest=args.dest, rate=0.25) #if migration, use fixed migration rate
   
   #simulate coalescence
   ts = msprime.sim_ancestry(samples={"A": 200, "B": 200, "C": 200},
