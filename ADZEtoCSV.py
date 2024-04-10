@@ -4,7 +4,7 @@
 # Principal Investigator: Dr. Zachary Szpiech
 # Date: 10 April 2024
 # Author: Andres del Castillo
-# Purpose: Converts all three ADZE output files into a processed CSV dataset
+# Purpose: Converts all ADZE output files into a processed CSV dataset
 import csv
 import pandas as pd
 import numpy as np
