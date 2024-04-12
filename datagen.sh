@@ -37,7 +37,7 @@ for ((i = 1; i <= $6; i++)); do
     # After obtaining our ADZE analysis files, convert the replicate's data to a CSV dataset (making sure to add a _2 to the comb file name)
     ./ADZEtoCSV.py -r "$1/$4_rep_${i}richness" -p "$1/$4_rep_${i}private" -C "$4"
 
-    if [ "$i" -eq 0 ]; then
+    if [ "$i" -eq 1 ]; then
         # For the first file, include the header
         cat "$1/$4_rep_${i}.csv" >> "$1/case$4_data.csv"
     else
