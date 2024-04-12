@@ -4,7 +4,7 @@
 # Purpose: Makefile for data generation + data processing of ML Pipeline
 
 # Base directory for data (passed as argument)
-BASEDIR ?= /path/to/data
+BASEDIR ?= $(CURDIR)
 
 # Number of replicates (if not specified: default value is 100)
 NUM_REPLICATES ?= 100
