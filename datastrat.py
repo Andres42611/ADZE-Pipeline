@@ -78,9 +78,9 @@ def process_datasets(csv_paths):
     combined_df = combine_datasets(csv_paths)
     training_df, testing_df, validation_df = stratify_data(combined_df)
     
-    shuffle_and_save(training_df, 'args.direc/StratData/training.csv')
-    shuffle_and_save(testing_df, 'args.direc/StratData/testing.csv')
-    shuffle_and_save(validation_df, 'args.direc/StratData/validation.csv')
+    shuffle_and_save(training_df, args.direc + '/StratData/training.csv')
+    shuffle_and_save(testing_df, args.direc + '/StratData/testing.csv')
+    shuffle_and_save(validation_df, args.direc + '/StratData/validation.csv')
 
 # Paths to the case-specific CSV files
 csv_paths = [
