@@ -16,7 +16,7 @@ from sklearn.preprocessing import StandardScaler
 #    DataFrame df: The dataset to process, which may contain vector data stored as comma-separated string values in its columns.
 #    bool only_mu: A flag indicating whether to retain only the first component of each vector. Default is True.
 # Returns:
-#    None: The function modifies the DataFrame in place, meaning the passed 'df' is altered directly and there is no return value.
+#    df_final: modified dataframe.
 def process_dataset(df, only_mu=True):
     #seperate mu, var, and SE vectors
     for column in df.columns:
@@ -34,7 +34,7 @@ def process_dataset(df, only_mu=True):
         columns_to_drop = []
         
     df_final = df.drop(columns=columns_to_drop)
-    df = df_final.copy()
+    return df_final
     
 
 # Description:
