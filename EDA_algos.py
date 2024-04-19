@@ -28,7 +28,7 @@ def process_dataset(df, only_mu=True):
             df.drop(column, axis=1, inplace=True)  # Drop original column
     
     #process dataset
-    if mu:
+    if only_mu:
         columns_to_drop = [col for col in df.columns if col[-1] not in ['1', 'k', 's', 'e']]
     else:
         columns_to_drop = []
