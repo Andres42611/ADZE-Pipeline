@@ -8,11 +8,6 @@
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from parser import init_datasplit_Parser
-
-#initialize parser
-parsed = init_datasplit_Parser()
-args = parsed.parse_args()
 
 # Description:
 #     This function aggregates multiple datasets from specified file paths into a single Pandas DataFrame.
@@ -36,21 +31,21 @@ def combine_datasets(paths):
 #                               column identifies the different classes or categories in the data that need to be equally represented in the splits.
 # Returns:
 #     DataFrame, DataFrame, DataFrame: Three DataFrames corresponding to the training, testing, and validation datasets, respectively.
-def stratify_data(df, class_column='Class'):
-    training_data = []
-    testing_data = []
-    validation_data = []
+def stratify_data(group, train_size=0.8, test_size=0.1, val_size=0.1):
+    # Ensure sizes sum to 1
+    assert train_size + test_size + val_size == 1, "Sizes must sum to 1"
 
-    for class_value in df[class_column].unique():
-        class_df = df[df[class_column] == class_value]
-        train, temp = train_test_split(class_df, test_size=0.2, random_state=42, shuffle=True)
-        test, validate = train_test_split(temp, test_size=0.5, random_state=42, shuffle=True)
-        
-        training_data.append(train)
-        testing_data.append(test)
-        validation_data.append(validate)
+    # Shuffle replicates
+    replicates = group['Replicate'].unique()
+    train_replicates, temp_replicates = train_test_split(replicates, train_size=train_size, shuffle=True)
+    test_replicates, val_replicates = train_test_split(temp_replicates, train_size=test_size/(test_size + val_size), shuffle=True)
 
-    return pd.concat(training_data), pd.concat(testing_data), pd.concat(validation_data)
+    # Assign sets
+    train_set = group[group['Replicate'].isin(train_replicates)]
+    test_set = group[group['Replicate'].isin(test_replicates)]
+    val_set = group[group['Replicate'].isin(val_replicates)]
+
+    return train_set, test_set, val_set
 
 # Description:
 #     Randomly shuffles the rows of a given DataFrame and saves the shuffled DataFrame to a CSV file specified by the filename. This function uses 
@@ -75,20 +70,22 @@ def shuffle_and_save(df, filename):
 # Returns:
 #     None: 
 def process_datasets(csv_paths):
-    combined_df = combine_datasets(csv_paths)
-    training_df, testing_df, validation_df = stratify_data(combined_df)
+    df = combine_datasets(csv_paths)
     
-    shuffle_and_save(training_df, args.direc + '/StratData/training.csv')
-    shuffle_and_save(testing_df, args.direc + '/StratData/testing.csv')
-    shuffle_and_save(validation_df, args.direc + '/StratData/validation.csv')
+    train_frames = []
+    test_frames = []
+    val_frames = []
+    
+    for class_name, group in df.groupby('Class'):
+        train, test, val = stratify_data(group)
+        train_frames.append(train)
+        test_frames.append(test)
+        val_frames.append(val)
+    
+    train_df, test_df, val_df = pd.concat(train_frames), pd.concat(test_frames), pd.concat(val_frames)
 
-# Paths to the case-specific CSV files
-csv_paths = [
-  args.direc + '/CaseA/caseA_data.csv',
-  args.direc + '/CaseB/caseB_data.csv',
-  args.direc + '/CaseC/caseC_data.csv',
-  args.direc + '/CaseD/caseD_data.csv',
-  args.direc + '/CaseE/caseE_data.csv'
-]
-    
+    shuffle_and_save(train_df, './ADZE_pipeline/3pop/StratData/training.csv')
+    shuffle_and_save(test_df, './ADZE_pipeline/3pop/StratData/testing.csv')
+    shuffle_and_save(val_df, './ADZE_pipeline/3pop/StratData/validation.csv')
+
 process_datasets(csv_paths)
