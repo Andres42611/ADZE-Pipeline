@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 
+# File: ADZEtoCSV.py
+# Principal Investigator: Dr. Zachary Szpiech
+# Date: 11 June 2024
+# Author: Andres del Castillo
+# Purpose: Flattens dataset into 1D replicate vectors and computes the euclidean, standardized euclidean, correlation, or with an RBF-Kernel
+#    with parameter sigma: sigma is the median of the euclidean distances
+
 import numpy as np
 from scipy.spatial.distance import pdist, squareform
 import pandas as pd
